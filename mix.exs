@@ -21,7 +21,8 @@ defmodule Goodies.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:conduit, "~> 0.12"}
+      {:conduit, "~> 0.12"},
+      {:tesla, "~> 1.3"}
     ]
   end
 end
