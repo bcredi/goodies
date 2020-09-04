@@ -60,7 +60,7 @@ defmodule Goodies.Conduit.Plug.Retry do
     jitter = :rand.uniform() * delay * opts.jitter
     wait_time = round(delay + jitter)
 
-    log_error(error, stacktrace, wait_time)
+    log_error(error, stacktrace, wait_time, retries)
 
     Process.sleep(wait_time)
 
@@ -70,15 +70,19 @@ defmodule Goodies.Conduit.Plug.Retry do
     |> attempt(next, retries + 1, opts)
   end
 
-  defp log_error(:nack, _, wait_time) do
-    Logger.warn("Message will be retried in #{wait_time}ms because it was nacked")
+  defp log_error(:nack, _, wait_time, retries) do
+    Logger.warn(
+      "Message will be retried in #{wait_time}ms because it was nacked - it was retried #{retries} times until now"
+    )
   end
 
-  defp log_error(error, stacktrace, wait_time) do
+  defp log_error(error, stacktrace, wait_time, retries) do
     formatted_error = Exception.format(:error, error, stacktrace)
 
     Logger.warn([
-      "Message will be retried in #{wait_time}ms because an exception was raised\n",
+      "Message will be retried in #{wait_time}ms because an exception was raised - it was retried ",
+      retries,
+      " times until now\n",
       formatted_error
     ])
   end
