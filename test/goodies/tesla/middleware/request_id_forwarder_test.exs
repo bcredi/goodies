@@ -9,7 +9,9 @@ defmodule Goodies.Tesla.Middleware.RequestIdForwarderTest do
       Logger.metadata(request_id: "123")
       {:ok, env} = @middleware.call(%Env{}, [], [])
 
-      request_id = Keyword.get(env.headers, "x-request-id")
+      {"x-request-id", request_id} =
+        Enum.find(env.headers, fn {key, _} -> key == "x-request-id" end)
+
       assert request_id == "123"
     end
 
