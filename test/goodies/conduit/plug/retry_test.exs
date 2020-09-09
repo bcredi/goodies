@@ -14,18 +14,22 @@ defmodule Goodies.Conduit.Plug.RetryTest do
       end
     end
 
-    test "it retries and after failing acks the failed message" do
+    test "it retries and after failing reraises the error" do
       capture_log(fn ->
-        assert %Conduit.Message{status: :ack} = ErroredRetry.run(%Conduit.Message{})
+        assert_raise(RuntimeError, "failure", fn ->
+          ErroredRetry.run(%Conduit.Message{})
+        end)
 
         assert_received({:process, first_message})
         assert_received({:process, second_message})
+        assert_received({:process, failed_message})
 
         assert get_header(first_message, "retries") == nil
         assert get_header(second_message, "retries") == 1
 
         assert first_message.status == :ack
         assert second_message.status == :ack
+        assert failed_message.status == :ack
       end)
     end
   end
@@ -62,7 +66,7 @@ defmodule Goodies.Conduit.Plug.RetryTest do
     end
   end
 
-  describe "when the message fails" do
+  describe "when the message is nacked" do
     defmodule NackedRetry do
       use Conduit.Subscriber
       plug(Goodies.Conduit.Plug.Retry, attempts: 2, delay: 2)
@@ -73,18 +77,20 @@ defmodule Goodies.Conduit.Plug.RetryTest do
       end
     end
 
-    test "it retries and eventually returns the failed message with ack" do
+    test "it retries and eventually returns the nacked message" do
       capture_log(fn ->
-        assert %Conduit.Message{status: :ack} = NackedRetry.run(%Conduit.Message{})
+        assert %Conduit.Message{status: :nack} = NackedRetry.run(%Conduit.Message{})
 
         assert_received({:process, first_message})
         assert_received({:process, second_message})
+        assert_received({:process, failed_message})
 
         assert get_header(first_message, "retries") == nil
         assert get_header(second_message, "retries") == 1
 
         assert first_message.status == :ack
         assert second_message.status == :ack
+        assert failed_message.status == :ack
       end)
     end
   end

@@ -48,11 +48,31 @@ defmodule Goodies.Conduit.Plug.Retry do
       retry(message, next, retries, error, System.stacktrace(), opts)
   end
 
-  defp retry(message, _, retries, error, stacktrace, %{attempts: attempts})
+  defp retry(message, next, retries, :nack, _, %{attempts: attempts})
+       when retries >= attempts - 1 do
+    Logger.warn("Message retries expired after #{retries} times because nack was received")
+
+    # send acked message to remove it from queue
+    message
+    |> ack
+    |> next.()
+  end
+
+  defp retry(message, next, retries, error, stacktrace, %{attempts: attempts})
        when retries >= attempts - 1 do
     formatted_error = Exception.format(:error, error, stacktrace)
-    Logger.warn(["Message retries expired\n", formatted_error])
-    ack(message)
+
+    Logger.warn([
+      "Message retries expired after #{retries} times because exception was raised\n",
+      formatted_error
+    ])
+
+    # send acked message to remove it from queue
+    message
+    |> ack
+    |> next.()
+
+    reraise error, stacktrace
   end
 
   defp retry(message, next, retries, error, stacktrace, opts) do
