@@ -3,7 +3,9 @@ defmodule Goodies.Conduit.Plug.DeadLetter do
 
   @moduledoc """
   Publishes messages that were nacked or raised an exception to a
-  dead letter destination.
+  dead letter destination and ack them to be removed from the regular queue.
+
+  Based on original `Conduit.Plug.DeadLetter`.
 
   The following options are required:
 
@@ -17,7 +19,7 @@ defmodule Goodies.Conduit.Plug.DeadLetter do
 
   ## Examples
 
-      plug Conduit.Plug.DeadLetter, broker: MyApp.Broker, publish_to: :error
+      plug Goodies.Conduit.Plug.DeadLetter, broker: MyApp.Broker, publish_to: :error
 
   """
 
