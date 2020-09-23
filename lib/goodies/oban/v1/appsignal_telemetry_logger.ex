@@ -51,8 +51,8 @@ defmodule Goodies.Oban.V1.AppsignalTelemetryLogger do
 
   defp normalize_error(error_metadata)
 
-  defp normalize_error(%{kind: :error, error: error, stack: stack}) do
-    {"ObanTupleError", inspect(error, limit: :infinity), stack}
+  defp normalize_error(%{worker: worker, kind: :error, error: error, stack: stack}) do
+    {"#{worker}Error", inspect(error, limit: :infinity), stack}
   end
 
   defp normalize_error(%{kind: :exception, error: error, stack: stack}) do
