@@ -21,7 +21,7 @@ defmodule Goodies.Oban.V1.AppsignalTelemetryLogger do
   """
   alias Appsignal.{Error, Transaction}
 
-  @transaction Application.get_env(:goodies, :appsignal_transaction_module)
+  @transaction Application.compile_env(:goodies, :appsignal_transaction_module)
 
   def handle_event([:oban, event], measurement, meta, _) when event in [:success, :failure] do
     transaction = record_event(measurement, meta)
