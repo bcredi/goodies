@@ -1,4 +1,4 @@
-defmodule Goodies.Oban.V1.TelemetryLogger do
+defmodule Goodies.Oban.V1.AppsignalTelemetryLogger do
   @moduledoc """
   This module handles Oban v1.2 (latest v1 release) Telemetry events.
 

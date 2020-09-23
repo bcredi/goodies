@@ -1,10 +1,10 @@
-defmodule Goodies.Oban.V1.TelemetryLoggerTest do
+defmodule Goodies.Oban.V1.AppsignalTelemetryLoggerTest do
   use ExUnit.Case
 
   import Mox
 
   alias Appsignal.{Transaction, TransactionMock}
-  alias Goodies.Oban.V1.TelemetryLogger
+  alias Goodies.Oban.V1.AppsignalTelemetryLogger
 
   setup :verify_on_exit!
 
@@ -27,7 +27,7 @@ defmodule Goodies.Oban.V1.TelemetryLoggerTest do
       }
 
       measurement = %{duration: Time.from_erl!({22, 30, 20}).second * 1000 * 1000}
-      assert TelemetryLogger.handle_event([:oban, :success], measurement, meta, nil) == :ok
+      assert AppsignalTelemetryLogger.handle_event([:oban, :success], measurement, meta, nil) == :ok
     end
 
     test "with failure event from an exception returns a complete transaction" do
@@ -59,7 +59,7 @@ defmodule Goodies.Oban.V1.TelemetryLoggerTest do
       expect(TransactionMock, :complete, 1, fn _ -> :ok end)
 
       measurement = %{duration: Time.from_erl!({22, 30, 20}).second * 1000 * 1000}
-      assert TelemetryLogger.handle_event([:oban, :failure], measurement, meta, nil) == :ok
+      assert AppsignalTelemetryLogger.handle_event([:oban, :failure], measurement, meta, nil) == :ok
     end
 
     test "with failure event from an error tuple returns a complete transaction" do
@@ -91,7 +91,7 @@ defmodule Goodies.Oban.V1.TelemetryLoggerTest do
       expect(TransactionMock, :complete, 1, fn _ -> :ok end)
 
       measurement = %{duration: Time.from_erl!({22, 30, 20}).second * 1000 * 1000}
-      assert TelemetryLogger.handle_event([:oban, :failure], measurement, meta, nil) == :ok
+      assert AppsignalTelemetryLogger.handle_event([:oban, :failure], measurement, meta, nil) == :ok
     end
   end
 end
