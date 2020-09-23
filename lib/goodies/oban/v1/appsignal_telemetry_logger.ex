@@ -1,20 +1,20 @@
 defmodule Goodies.Oban.V1.AppsignalTelemetryLogger do
   @moduledoc """
-  This module handles Oban v1.2 (latest v1 release) Telemetry events.
+  This module logs Oban v1.2 (latest v1 release) Telemetry events on Appsignal.
 
   To use it, declare on `MyApp.Application.start/1` of the app that is using Oban:
   ```elixir
     :telemetry.attach(
       "oban-failure",
       [:oban, :failure],
-      &Goodies.Oban.V1.TelemetryLogger.handle_event/4,
+      &Goodies.Oban.V1.AppsignalTelemetryLogger.handle_event/4,
       nil
     )
 
     :telemetry.attach(
       "oban-success",
       [:oban, :success],
-      &Goodies.Oban.V1.TelemetryLogger.handle_event/4,
+      &Goodies.Oban.V1.AppsignalTelemetryLogger.handle_event/4,
       nil
     )
   ```
