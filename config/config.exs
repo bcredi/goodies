@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 config :goodies, appsignal_transaction_module: Appsignal.Transaction
 
