@@ -33,7 +33,7 @@ defmodule Goodies.Oban.V1.AppsignalTelemetryLogger do
   end
 
   defp transaction_module do
-    Application.fetch_env!(:goodies, :appsignal_transaction_module)
+    Application.fetch_env!(:goodies, :appsignal_transaction_module) || Appsignal.Transaction
   end
 
   defp record_event(measurement, meta) do
