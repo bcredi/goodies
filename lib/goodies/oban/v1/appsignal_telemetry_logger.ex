@@ -26,23 +26,19 @@ defmodule Goodies.Oban.V1.AppsignalTelemetryLogger do
 
     if event == :failure && meta.attempt >= meta.max_attempts do
       {reason, message, stack} = normalize_error(meta)
-      transaction_module().set_error(transaction, reason, message, stack)
+      Transaction.set_error(transaction, reason, message, stack)
     end
 
-    transaction_module().complete(transaction)
-  end
-
-  defp transaction_module do
-    Application.fetch_env!(:goodies, :appsignal_transaction_module) || Appsignal.Transaction
+    Transaction.complete(transaction)
   end
 
   defp record_event(measurement, meta) do
     metadata = %{"id" => meta.id, "queue" => meta.queue, "attempt" => meta.attempt}
 
-    transaction = transaction_module().start(Transaction.generate_id(), :background_job)
+    transaction = Transaction.start(Transaction.generate_id(), :background_job)
 
     transaction
-    |> transaction_module().set_action("#{meta.worker}#perform")
+    |> Transaction.set_action("#{meta.worker}#perform")
     |> Transaction.set_meta_data(metadata)
     |> Transaction.set_sample_data("params", meta.args)
     |> Transaction.record_event("worker.perform", "", "", measurement.duration, 0)

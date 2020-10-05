@@ -30,7 +30,7 @@ defmodule Goodies.MixProject do
       {:credo, "~> 1.4.0", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0.0", only: [:dev], runtime: false},
       {:excoveralls, "~> 0.10", only: :test},
-      {:mox, "~> 0.5", only: :test}
+      {:mock, "~> 0.3.0", only: :test}
     ]
   end
 
