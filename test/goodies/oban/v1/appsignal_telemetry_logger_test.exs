@@ -52,7 +52,7 @@ defmodule Goodies.Oban.V1.AppsignalTelemetryLoggerTest do
           %Transaction{resource: :background_job, id: "01ef700c-3c93-4b52-93d2-e9d5339c7428"}
         end,
         set_action: fn _, _ -> :ok end,
-        set_error: fn _, "\"RuntimeError\"", "\"runtime error\"", [] -> :ok end,
+        set_error: fn _, _, _, _ -> :ok end,
         complete: fn _ -> :ok end
       ) do
         assert AppsignalTelemetryLogger.handle_event([:oban, :failure], measurement, meta, nil) ==
@@ -85,9 +85,7 @@ defmodule Goodies.Oban.V1.AppsignalTelemetryLoggerTest do
           %Transaction{resource: :background_job, id: "01ef700c-3c93-4b52-93d2-e9d5339c7428"}
         end,
         set_action: fn _, _ -> :ok end,
-        set_error: fn _, "MyApp.TupleFailureWorkerError", "%{error: \"some error\"}", [] ->
-          :ok
-        end,
+        set_error: fn _, _, _, _ -> :ok end,
         complete: fn _ -> :ok end
       ) do
         assert AppsignalTelemetryLogger.handle_event([:oban, :failure], measurement, meta, nil) ==
