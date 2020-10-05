@@ -25,6 +25,10 @@ defmodule Goodies.Oban.V1.AppsignalTelemetryLoggerTest do
       ) do
         assert AppsignalTelemetryLogger.handle_event([:oban, :success], measurement, meta, nil) ==
                  :ok
+
+        assert called(Transaction.start(:_, :_))
+        assert called(Transaction.set_action(:_, :_))
+        assert called(Transaction.complete(:_))
       end
     end
 
@@ -53,6 +57,11 @@ defmodule Goodies.Oban.V1.AppsignalTelemetryLoggerTest do
       ) do
         assert AppsignalTelemetryLogger.handle_event([:oban, :failure], measurement, meta, nil) ==
                  :ok
+
+        assert called(Transaction.start(:_, :_))
+        assert called(Transaction.set_action(:_, :_))
+        assert called(Transaction.set_error(:_, "\"RuntimeError\"", "\"runtime error\"", []))
+        assert called(Transaction.complete(:_))
       end
     end
 
@@ -83,6 +92,20 @@ defmodule Goodies.Oban.V1.AppsignalTelemetryLoggerTest do
       ) do
         assert AppsignalTelemetryLogger.handle_event([:oban, :failure], measurement, meta, nil) ==
                  :ok
+
+        assert called(Transaction.start(:_, :_))
+        assert called(Transaction.set_action(:_, :_))
+
+        assert called(
+                 Transaction.set_error(
+                   :_,
+                   "MyApp.TupleFailureWorkerError",
+                   "%{error: \"some error\"}",
+                   []
+                 )
+               )
+
+        assert called(Transaction.complete(:_))
       end
     end
   end
