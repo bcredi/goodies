@@ -30,16 +30,11 @@ defmodule Goodies.Oban.V2.AppsignalTelemetryLoggerTest do
 
       measurement = %{duration: Time.from_erl!({22, 30, 20}).second * 1000 * 1000}
 
-      with_mock(Transaction, [:passthrough],
-        start: fn id, resource -> %Transaction{id: id, resource: resource} end,
-        set_action: fn _, _ -> :ok end,
-        complete: fn _ -> :ok end
-      ) do
+      with_mock(Transaction, [:passthrough], complete: fn _ -> :ok end) do
         assert AppsignalTelemetryLogger.handle_event([:oban, :job, :stop], measurement, meta, nil) ==
                  :ok
 
         assert called(Transaction.start(:_, :_))
-        assert called(Transaction.set_action(:_, :_))
         assert called(Transaction.complete(:_))
       end
     end
@@ -60,14 +55,7 @@ defmodule Goodies.Oban.V2.AppsignalTelemetryLoggerTest do
 
       measurement = %{duration: Time.from_erl!({22, 30, 20}).second * 1000 * 1000}
 
-      with_mock(Transaction, [:passthrough],
-        start: fn _, _ ->
-          %Transaction{resource: :background_job, id: "01ef700c-3c93-4b52-93d2-e9d5339c7428"}
-        end,
-        set_action: fn _, _ -> :ok end,
-        set_error: fn _, "\"RuntimeError\"", "\"runtime error\"", [] -> :ok end,
-        complete: fn _ -> :ok end
-      ) do
+      with_mock(Transaction, [:passthrough], complete: fn _ -> :ok end) do
         assert AppsignalTelemetryLogger.handle_event(
                  [:oban, :job, :exception],
                  measurement,
@@ -77,7 +65,6 @@ defmodule Goodies.Oban.V2.AppsignalTelemetryLoggerTest do
                  :ok
 
         assert called(Transaction.start(:_, :_))
-        assert called(Transaction.set_action(:_, :_))
         assert called(Transaction.set_error(:_, "\"RuntimeError\"", "\"runtime error\"", []))
         assert called(Transaction.complete(:_))
       end
@@ -102,19 +89,7 @@ defmodule Goodies.Oban.V2.AppsignalTelemetryLoggerTest do
 
       measurement = %{duration: Time.from_erl!({22, 30, 20}).second * 1000 * 1000}
 
-      with_mock(Transaction, [:passthrough],
-        start: fn _, _ ->
-          %Transaction{resource: :background_job, id: "01ef700c-3c93-4b52-93d2-e9d5339c7428"}
-        end,
-        set_action: fn _, _ -> :ok end,
-        set_error: fn _,
-                      "\"Goodies.Oban.V2.AppsignalTelemetryLoggerTest.Oban.PerformError\"",
-                      "\"MyApp.TupleFailureWorker failed with {:error, \\\"some error\\\"}\"",
-                      [] ->
-          :ok
-        end,
-        complete: fn _ -> :ok end
-      ) do
+      with_mock(Transaction, [:passthrough], complete: fn _ -> :ok end) do
         assert AppsignalTelemetryLogger.handle_event(
                  [:oban, :job, :exception],
                  measurement,
@@ -124,7 +99,6 @@ defmodule Goodies.Oban.V2.AppsignalTelemetryLoggerTest do
                  :ok
 
         assert called(Transaction.start(:_, :_))
-        assert called(Transaction.set_action(:_, :_))
 
         assert called(
                  Transaction.set_error(
