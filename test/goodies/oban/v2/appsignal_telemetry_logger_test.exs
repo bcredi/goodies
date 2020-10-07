@@ -65,7 +65,7 @@ defmodule Goodies.Oban.V2.AppsignalTelemetryLoggerTest do
                  :ok
 
         assert called(Transaction.start(:_, :_))
-        assert called(Transaction.set_error(:_, "\"RuntimeError\"", "\"runtime error\"", []))
+        assert called(Transaction.set_error(:_, "RuntimeError", "runtime error", []))
         assert called(Transaction.complete(:_))
       end
     end
@@ -103,8 +103,8 @@ defmodule Goodies.Oban.V2.AppsignalTelemetryLoggerTest do
         assert called(
                  Transaction.set_error(
                    :_,
-                   "\"Goodies.Oban.V2.AppsignalTelemetryLoggerTest.Oban.PerformError\"",
-                   "\"MyApp.TupleFailureWorker failed with {:error, \\\"some error\\\"}\"",
+                   "Goodies.Oban.V2.AppsignalTelemetryLoggerTest.Oban.PerformError",
+                   "MyApp.TupleFailureWorker failed with {:error, \"some error\"}",
                    []
                  )
                )

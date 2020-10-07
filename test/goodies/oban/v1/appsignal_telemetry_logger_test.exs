@@ -47,7 +47,7 @@ defmodule Goodies.Oban.V1.AppsignalTelemetryLoggerTest do
                  :ok
 
         assert called(Transaction.start(:_, :_))
-        assert called(Transaction.set_error(:_, "\"RuntimeError\"", "\"runtime error\"", []))
+        assert called(Transaction.set_error(:_, "RuntimeError", "runtime error", []))
         assert called(Transaction.complete(:_))
       end
     end
