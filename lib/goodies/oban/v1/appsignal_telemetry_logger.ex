@@ -50,11 +50,15 @@ defmodule Goodies.Oban.V1.AppsignalTelemetryLogger do
   defp normalize_error(error_metadata)
 
   defp normalize_error(%{kind: :error, error: error, stack: stack, worker: worker}) do
-    {"#{worker}Error", inspect(error, limit: :infinity), stack}
+    {"#{worker}Error", stringify(error), stack}
   end
 
   defp normalize_error(%{kind: :exception, error: error, stack: stack}) do
     {reason, message} = Error.metadata(error)
-    {inspect(reason), inspect(message, limit: :infinity), stack}
+    {stringify(reason), stringify(message), stack}
+  end
+
+  defp stringify(value) do
+    if is_binary(value), do: value, else: inspect(value, limit: :infinity)
   end
 end
