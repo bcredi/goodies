@@ -1,21 +1,16 @@
 # Goodies
 
-**TODO: Add description**
+Shared helper modules for Bcredi Platform.
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `goodies` to your list of dependencies in `mix.exs`:
+Add `goodies` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
   [
-    {:goodies, "~> 0.1.0"}
+    {:goodies, github: "bcredi/goodies"}
   ]
 end
 ```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/goodies](https://hexdocs.pm/goodies).
 
