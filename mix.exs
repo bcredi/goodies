@@ -24,8 +24,8 @@ defmodule Goodies.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:conduit, "~> 0.12"},
-      {:tesla, "~> 1.3"},
+      {:conduit, "~> 0.12", optional: true},
+      {:tesla, "~> 1.3", optional: true},
       {:appsignal, "~> 1.0"},
       {:credo, "~> 1.4.0", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0.0", only: [:dev], runtime: false},

@@ -35,14 +35,10 @@ defmodule Goodies.Conduit.Plug.RequestId do
   and always assigns it to the logger metadata.
   """
   def call(message, next, _opts) do
-    request_id = Logger.metadata()[:request_id]
-
-    message =
-      if is_nil(request_id),
-        do: message,
-        else: put_new_correlation_id(message, request_id)
+    correlation_id = Logger.metadata()[:request_id] || UUID.uuid4()
 
     message
+    |> put_new_correlation_id(correlation_id)
     |> put_logger_metadata()
     |> next.()
   end
