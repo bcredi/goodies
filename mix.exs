@@ -10,8 +10,7 @@ defmodule Goodies.MixProject do
       test_coverage: [tool: ExCoveralls],
       elixirc_paths: elixirc_paths(Mix.env()),
       elixirc_options: [warnings_as_errors: true],
-      deps: deps(),
-      aliases: aliases()
+      deps: deps()
     ]
   end
 
@@ -33,6 +32,4 @@ defmodule Goodies.MixProject do
       {:mock, "~> 0.3.0", only: :test}
     ]
   end
-
-  defp aliases, do: [test: ["coveralls", "credo --strict"]]
 end
